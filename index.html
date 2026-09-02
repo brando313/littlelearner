@@ -65,6 +65,10 @@
   #tile-letters{background:var(--barn);}
   #tile-colors{background:var(--plum);}
   #tile-shapes{background:var(--grass);}
+  #tile-animals{background:#2AA7A0;}
+  #tile-catherine{background:#E85D8A;}
+  #tile-memory{background:#5B6ABF;}
+  #tile-anthems{background:#3E7CB1;}
   .tile .glyphs .dot{display:inline-block;width:.7em;height:.7em;border-radius:50%;margin:0 2px;vertical-align:middle;}
 
   /* ---------- module screen ---------- */
@@ -107,6 +111,106 @@
   .animal-rows{display:flex;flex-direction:column;gap:1.2vh;align-items:center;}
   .animal-row{display:flex;gap:1.4vw;font-size:min(9vh,8vw);line-height:1;}
   .none-word{color:var(--ink-soft);font-weight:700;font-size:min(6vh,5vw);}
+
+  .count-title{font-weight:800;font-size:min(7vh,6vw);letter-spacing:-0.01em;}
+  .count-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1.6vh;max-width:92%;}
+  .count-cell{
+    width:min(12vh,13vw);height:min(12vh,13vw);
+    display:flex;align-items:center;justify-content:center;
+    border-radius:24%;background:var(--sky);border:4px solid var(--line);
+    font-weight:800;font-size:min(6.5vh,7vw);
+    transition:transform .16s ease, background .16s ease, border-color .16s ease;
+  }
+  .count-cell.lit{background:#FBEBC2;border-color:#E4B94F;}
+  .count-cell.now{transform:scale(1.16);background:var(--barn);border-color:var(--barn);color:#fff;}
+  .count-cell.cell-sm{width:min(9vh,10vw);height:min(9vh,10vw);font-size:min(5vh,5.5vw);border-radius:26%;}
+  .count-cell.cell-color.now{transform:scale(1.16);box-shadow:0 0 0 6px var(--ink);}
+  .count-cell.cell-shape svg{width:72%;height:72%;}
+  @media (prefers-reduced-motion:reduce){
+    .count-cell{transition:none;}
+    .count-cell.now{transform:none;}
+  }
+
+  .animal-big{font-size:min(36vh,30vw);line-height:1;}
+
+  /* ---------- name module ---------- */
+  .name-tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:1.4vh;}
+  .name-tile{
+    width:min(13vh,9.5vw);height:min(15vh,11.5vw);
+    display:flex;align-items:center;justify-content:center;
+    border-radius:20%;background:var(--sky);border:4px solid var(--line);
+    font-weight:800;font-size:min(9vh,7vw);
+    transition:transform .16s ease, background .16s ease, border-color .16s ease;
+  }
+  .name-tile.lit{background:#FBEBC2;border-color:#E4B94F;}
+  .name-tile.now{transform:scale(1.14);background:var(--barn);border-color:var(--barn);color:#fff;}
+  .name-word{font-weight:800;font-size:min(9vh,8vw);letter-spacing:-0.01em;}
+
+  /* ---------- memory game ---------- */
+  .memory-hud{
+    display:flex;align-items:center;gap:10px;background:var(--panel);
+    border:3px solid var(--line);border-radius:18px;padding:6px 8px;flex:0 0 auto;
+  }
+  .pair-picker{display:flex;gap:4px;background:var(--sky);border-radius:13px;padding:4px;}
+  .pair-picker button{
+    width:38px;height:38px;border-radius:10px;font-weight:800;font-size:18px;color:var(--ink-soft);
+  }
+  .pair-picker button.on{background:var(--ink);color:#fff;}
+  #memTimer{font-weight:800;font-size:22px;font-variant-numeric:tabular-nums;min-width:56px;text-align:center;}
+  #memRestart{font-size:24px;font-weight:800;width:44px;height:44px;border-radius:13px;background:var(--sky);}
+  .mem-grid{
+    display:grid;gap:1.8vh;
+  }
+  .mem-grid.p3{grid-template-columns:repeat(3,1fr);width:min(92%,100vh);}
+  .mem-grid.p6{grid-template-columns:repeat(4,1fr);width:min(92%,88vh);}
+  .mem-grid.p9{grid-template-columns:repeat(6,1fr);width:min(96%,132vh);}
+  .mem-grid.p6 .mem-card{font-size:min(9.5vh,8vw);border-radius:18px;}
+  .mem-grid.p9 .mem-card{font-size:min(7vh,6vw);border-radius:14px;border-width:3px;}
+  .mem-card{
+    aspect-ratio:1;border-radius:22px;border:4px solid rgba(0,0,0,.12);
+    background:var(--barn);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:min(13vh,11vw);line-height:1;
+    transition:transform .12s ease, background .2s ease, border-color .2s ease;
+  }
+  .mem-card:active{transform:scale(.96);}
+  .mem-card .face{display:none;}
+  .mem-card.up,.mem-card.matched{background:var(--panel);border-color:var(--line);}
+  .mem-card.matched{background:#DDF2E5;border-color:#58BB7C;}
+  .mem-card.up .face,.mem-card.matched .face{display:block;}
+  .mem-card.up .back,.mem-card.matched .back{display:none;}
+  #memWin{
+    position:absolute;inset:0;border-radius:inherit;
+    background:rgba(255,255,255,.94);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh;
+  }
+  .win-title{font-weight:800;font-size:min(10vh,9vw);}
+  .win-time{font-weight:800;font-size:min(6vh,5vw);color:var(--ink-soft);font-variant-numeric:tabular-nums;}
+  #memAgain{
+    background:var(--grass);color:#fff;font-weight:800;font-size:min(4.5vh,4vw);
+    padding:2vh 5vw;border-radius:22px;border:4px solid rgba(0,0,0,.12);
+  }
+
+  /* ---------- anthems ---------- */
+  .flag-row{display:flex;gap:4vw;justify-content:center;flex-wrap:wrap;}
+  .flag-btn{
+    display:flex;flex-direction:column;align-items:center;gap:1.5vh;
+    background:var(--sky);border:4px solid var(--line);border-radius:26px;
+    padding:3vh 4vw;transition:transform .08s ease;
+  }
+  .flag-btn:active{transform:scale(.96);}
+  .flag-emoji{font-size:min(26vh,22vw);line-height:1;}
+  .flag-name{font-weight:800;font-size:min(6vh,5vw);}
+  .anthem-title{font-weight:800;font-size:min(4.5vh,4.5vw);}
+  .anthem-frame{
+    flex:1;min-height:0;width:100%;max-width:min(96%,120vh);
+    border-radius:18px;overflow:hidden;border:4px solid var(--line);background:#000;
+  }
+  .anthem-frame iframe{width:100%;height:100%;display:block;}
+  .anthem-back{
+    background:var(--panel);border:4px solid var(--line);border-radius:18px;
+    font-weight:800;font-size:20px;padding:12px 26px;
+  }
 
   .big-letters{font-size:min(34vh,26vw);font-weight:800;line-height:1;letter-spacing:.02em;}
   .sound-chips{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
@@ -164,6 +268,18 @@
     <button class="tile" id="tile-shapes" data-module="shapes">
       <span class="glyphs">&#9679; &#9632; &#9650;</span><span>Shapes</span>
     </button>
+    <button class="tile" id="tile-animals" data-module="animals">
+      <span class="glyphs">&#x1F404; &#x1F437; &#x1F434;</span><span>Animals</span>
+    </button>
+    <button class="tile" id="tile-catherine" data-module="catherine">
+      <span class="glyphs">C&#10084;&#65039;</span><span>Catherine</span>
+    </button>
+    <button class="tile" id="tile-memory" data-module="memory">
+      <span class="glyphs">&#x2B50; &#x2B50;</span><span>Memory Match</span>
+    </button>
+    <button class="tile" id="tile-anthems" data-module="anthems">
+      <span class="glyphs">&#x1F1E8;&#x1F1E6; &#x1F1FA;&#x1F1F8;</span><span>Anthems</span>
+    </button>
   </div>
 </div>
 
@@ -172,9 +288,18 @@
   <div class="topbar">
     <button class="home-btn" id="homeBtn" aria-label="Back to home">&#8962;</button>
     <div class="module-name" id="moduleName"></div>
-    <div class="mode-toggle">
+    <div class="mode-toggle" id="modeToggle">
       <button id="teachBtn" class="on">Teach</button>
       <button id="quizBtn">Quiz</button>
+    </div>
+    <div class="memory-hud hidden" id="memoryHud">
+      <div class="pair-picker" id="pairPicker" aria-label="Number of pairs">
+        <button data-pairs="3" class="on">3</button>
+        <button data-pairs="6">6</button>
+        <button data-pairs="9">9</button>
+      </div>
+      <span id="memTimer">0:00</span>
+      <button id="memRestart" aria-label="New round">&#8635;</button>
     </div>
   </div>
 
@@ -214,15 +339,15 @@ const CUSTOM_AUDIO = new Set([]);
 /* ------------------------- content ------------------------- */
 const ANIMALS = [
   {emoji:"\u{1F404}", word:"cows"},
-  {emoji:"\u{1F986}", word:"ducks"},
+  {emoji:"\u{1F986}", word:"duckies"}, /* "ducks" comes out as "dogs" in TTS */
   {emoji:"\u{1F437}", word:"pigs"},
   {emoji:"\u{1F414}", word:"chickens"},
   {emoji:"\u{1F434}", word:"horses"}
 ];
-const NUMBER_WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"];
+const NUMBER_WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"];
 
 const NUMBERS = [];
-for (let n = 0; n <= 10; n++) {
+for (let n = 0; n <= 12; n++) {
   const a = n === 0 ? ANIMALS[1] : ANIMALS[(n - 1) % 5]; // rotates cow, duck, pig, chicken, horse
   NUMBERS.push({
     id: "num-" + n,
@@ -301,11 +426,52 @@ const SHAPES = [
   {id:"shape-diamond",   name:"Diamond",   teachTail:"A diamond looks like a kite!"}
 ].map(s => ({...s, kind: s.id.slice(6), say: s.name + "!", teach: s.name + "! " + s.teachTail}));
 
+const ANIMAL_ITEMS = [
+  {id:"animal-cow",      name:"Cow",      emoji:"\u{1F404}", say:"Cow!",      teach:"Cow! A cow says moo!"},
+  {id:"animal-duck",     name:"Duck",     emoji:"\u{1F986}", say:"Ducky!",    teach:"Ducky! A ducky says quack, quack!"},
+  {id:"animal-pig",      name:"Pig",      emoji:"\u{1F437}", say:"Pig!",      teach:"Pig! A pig says oink, oink!"},
+  {id:"animal-chicken",  name:"Chicken",  emoji:"\u{1F414}", say:"Chicken!",  teach:"Chicken! A chicken says cluck, cluck!"},
+  {id:"animal-horse",    name:"Horse",    emoji:"\u{1F434}", say:"Horse!",    teach:"Horse! A horse says neigh!"},
+  {id:"animal-dog",      name:"Dog",      emoji:"\u{1F436}", say:"Dog!",      teach:"Dog! A dog says woof, woof!"},
+  {id:"animal-cat",      name:"Cat",      emoji:"\u{1F431}", say:"Cat!",      teach:"Cat! A cat says meow!"},
+  {id:"animal-sheep",    name:"Sheep",    emoji:"\u{1F411}", say:"Sheep!",    teach:"Sheep! A sheep says baa!"},
+  {id:"animal-frog",     name:"Frog",     emoji:"\u{1F438}", say:"Frog!",     teach:"Frog! A frog says ribbit, ribbit!"},
+  {id:"animal-bunny",    name:"Bunny",    emoji:"\u{1F430}", say:"Bunny!",    teach:"Bunny! A bunny hops and hops!"},
+  {id:"animal-lion",     name:"Lion",     emoji:"\u{1F981}", say:"Lion!",     teach:"Lion! A lion says roar!"},
+  {id:"animal-elephant", name:"Elephant", emoji:"\u{1F418}", say:"Elephant!", teach:"Elephant! An elephant has a long, long trunk!"}
+];
+
+/* Name module — change these two lines to spell a different name.
+   Custom audio key for the spoken name: "name-catherine". */
+const NAME_TEXT = "Catherine";
+const NAME_KEY = "name-catherine";
+
+/* Memory game draws from the full animal set; pairs is a setting (3, 6, or 9) */
+const MEMORY_POOL = ANIMAL_ITEMS;
+
+/* Anthems module — tap a flag, watch that anthem (needs internet).
+   Swap the video ids here if the two are reversed. */
+const ANTHEMS = [
+  {id:"anthem-canada", flag:"\u{1F1E8}\u{1F1E6}", country:"Canada",
+   title:"O Canada", video:"gUSZ_nPsNCg"},
+  {id:"anthem-usa", flag:"\u{1F1FA}\u{1F1F8}", country:"USA",
+   title:"The Star-Spangled Banner", video:"b3qRBITXnig"}
+];
+
 const MODULES = {
-  numbers: {label:"Numbers", items:NUMBERS},
-  letters: {label:"Letters", items:LETTERS},
-  colors:  {label:"Colors",  items:COLORS},
-  shapes:  {label:"Shapes",  items:SHAPES}
+  numbers: {label:"Numbers", type:"learn", items:NUMBERS,
+            recapIntro:{key:"count-intro",   text:"Let\u2019s count!"}},
+  letters: {label:"Letters", type:"learn", items:LETTERS,
+            recapIntro:{key:"recap-letters", text:"Let\u2019s say our A B Cs!"}},
+  colors:  {label:"Colors",  type:"learn", items:COLORS,
+            recapIntro:{key:"recap-colors",  text:"Let\u2019s say our colors!"}},
+  shapes:  {label:"Shapes",  type:"learn", items:SHAPES,
+            recapIntro:{key:"recap-shapes",  text:"Let\u2019s say our shapes!"}},
+  animals: {label:"Animals", type:"learn", items:ANIMAL_ITEMS,
+            recapIntro:{key:"recap-animals", text:"Let\u2019s say our animals!"}},
+  catherine: {label:"Catherine", type:"name",   items:[]},
+  memory:    {label:"Memory Match", type:"memory", items:[]},
+  anthems:   {label:"Anthems", type:"anthems", items:[]}
 };
 
 /* ------------------------- speech ------------------------- */
@@ -430,6 +596,9 @@ function renderCard(){
   else if (state.module === "shapes"){
     card.innerHTML = shapeSVG(item.kind) + '<div class="shape-name">' + item.name + "</div>";
   }
+  else if (state.module === "animals"){
+    card.innerHTML = '<div class="animal-big">' + item.emoji + '</div><div class="shape-name">' + item.name + "</div>";
+  }
 
   card.classList.remove("pop");
   void card.offsetWidth; /* restart animation */
@@ -455,6 +624,8 @@ const TEACH_SAFETY = 12000; // advance anyway if speech never reports back
 
 function teachCurrent(){
   clearTimers();
+  recapActive = false;
+  recapGen++;
   renderCard();
   const item = currentItem();
   speak(item.id + "-teach", item.teach, () => {
@@ -468,8 +639,77 @@ function teachCurrent(){
 
 function teachNext(){
   clearTimers();
+  const atEnd = state.pos === state.order.length - 1;
   state.pos = (state.pos + 1) % state.order.length; // loops forever
+  if (atEnd){
+    recapModule(); // show everything, announce each item, then start over
+    return;
+  }
   teachCurrent();
+}
+
+/* At the end of every teach loop: show all items in a grid, light each
+   one up as it is announced, then loop back to the start. Custom audio:
+   uses the module's recap intro key plus each item's short "<id>" clip. */
+let recapGen = 0;
+let recapActive = false;
+
+function recapCell(item, i){
+  const id = ' id="cell-' + i + '"';
+  if (state.module === "numbers")
+    return '<span class="count-cell"' + id + ">" + item.n + "</span>";
+  if (state.module === "letters")
+    return '<span class="count-cell cell-sm"' + id + ">" + item.upper + "</span>";
+  if (state.module === "colors")
+    return '<span class="count-cell cell-color"' + id
+      + ' style="background:' + item.hex + ';border-color:rgba(0,0,0,.18)"></span>';
+  if (state.module === "shapes")
+    return '<span class="count-cell cell-shape"' + id + ">" + shapeSVG(item.kind) + "</span>";
+  if (state.module === "animals")
+    return '<span class="count-cell cell-sm"' + id + ">" + item.emoji + "</span>";
+  return "";
+}
+
+function recapModule(){
+  clearTimers();
+  stopSpeaking();
+  recapActive = true;
+  const token = ++recapGen;
+  const mod = MODULES[state.module];
+  const items = mod.items;
+  const last = items.length - 1;
+  const card = $("card");
+  card.style.background = "";
+  card.style.color = "";
+  card.innerHTML = '<div class="count-title">' + mod.recapIntro.text + "</div>"
+    + '<div class="count-grid">' + items.map(recapCell).join("") + "</div>";
+  card.classList.remove("pop");
+  void card.offsetWidth;
+  card.classList.add("pop");
+
+  const alive = () => token === recapGen && state.mode === "teach";
+  const step = (i) => {
+    if (!alive()) return;
+    const prev = $("cell-" + (i - 1));
+    if (prev) prev.classList.remove("now");
+    if (i > last){
+      recapActive = false;
+      advanceTimer = setTimeout(() => { if (alive()) teachCurrent(); }, TEACH_PAUSE);
+      return;
+    }
+    const cell = $("cell-" + i);
+    cell.classList.add("lit", "now");
+    speak(items[i].id, items[i].say, () => {
+      clearTimeout(safetyTimer);
+      advanceTimer = setTimeout(() => step(i + 1), 280);
+    });
+    safetyTimer = setTimeout(() => { if (alive()) step(i + 1); }, 6000);
+  };
+  speak(mod.recapIntro.key, mod.recapIntro.text, () => {
+    clearTimeout(safetyTimer);
+    advanceTimer = setTimeout(() => step(0), 450);
+  });
+  safetyTimer = setTimeout(() => { if (alive()) step(0); }, 6000);
 }
 
 /* ------------------------- quiz ------------------------- */
@@ -482,6 +722,196 @@ function quizMove(step){
   const len = state.order.length;
   state.pos = (state.pos + step + len) % len;
   quizShow();
+}
+
+/* ------------------------- name module ------------------------- */
+/* Says the name, spells it letter by letter with highlights, says it
+   again, pauses, then repeats. Letters reuse the "letter-x" clips. */
+function nameSequence(){
+  clearTimers();
+  stopSpeaking();
+  const token = ++recapGen;
+  const chars = NAME_TEXT.split("");
+  const last = chars.length - 1;
+  const card = $("card");
+  card.style.background = "";
+  card.style.color = "";
+  card.innerHTML = '<div class="name-word">' + NAME_TEXT + "</div>"
+    + '<div class="name-tiles">'
+    + chars.map((ch, i) => '<span class="name-tile" id="cell-' + i + '">' + ch + "</span>").join("")
+    + "</div>";
+  card.classList.remove("pop");
+  void card.offsetWidth;
+  card.classList.add("pop");
+
+  const alive = () => token === recapGen && state.module === "catherine";
+  const sayName = (done) => speak(NAME_KEY, NAME_TEXT + "!", done);
+  const step = (i) => {
+    if (!alive()) return;
+    const prev = $("cell-" + (i - 1));
+    if (prev) prev.classList.remove("now");
+    if (i > last){
+      sayName(() => {
+        advanceTimer = setTimeout(() => { if (alive()) nameSequence(); }, 2400);
+      });
+      return;
+    }
+    const cell = $("cell-" + i);
+    cell.classList.add("lit", "now");
+    const upper = chars[i].toUpperCase();
+    speak("letter-" + chars[i].toLowerCase(), upper + "!", () => {
+      clearTimeout(safetyTimer);
+      advanceTimer = setTimeout(() => step(i + 1), 300);
+    });
+    safetyTimer = setTimeout(() => { if (alive()) step(i + 1); }, 6000);
+  };
+  sayName(() => {
+    clearTimeout(safetyTimer);
+    advanceTimer = setTimeout(() => step(0), 500);
+  });
+  safetyTimer = setTimeout(() => { if (alive()) step(0); }, 6000);
+}
+
+/* ------------------------- memory game ------------------------- */
+const mem = {pairs:3, layout:[], prevIds:[], flipped:[], matchedCount:0, lock:false,
+             interval:null, startAt:0, running:false};
+
+function memFormat(ms){
+  const s = Math.floor(ms / 1000);
+  return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+}
+function memStopClock(){
+  clearInterval(mem.interval);
+  mem.interval = null;
+  mem.running = false;
+}
+function memStartClock(){
+  memStopClock();
+  mem.startAt = Date.now();
+  mem.running = true;
+  $("memTimer").textContent = "0:00";
+  mem.interval = setInterval(() => {
+    $("memTimer").textContent = memFormat(Date.now() - mem.startAt);
+  }, 500);
+}
+
+function newMemoryRound(){
+  clearTimers();
+  stopSpeaking();
+  recapGen++;
+  mem.flipped = [];
+  mem.matchedCount = 0;
+  mem.lock = false;
+
+  /* pick this round's animals */
+  const pool = shuffled(MEMORY_POOL.length).slice(0, mem.pairs).map(i => MEMORY_POOL[i]);
+  let deck;
+  /* reshuffle until no card face lands where the same face was last round */
+  let tries = 0;
+  do {
+    deck = shuffled(mem.pairs * 2).map(i => pool[i % mem.pairs]);
+    tries++;
+  } while (
+    tries < 200 &&
+    mem.prevIds.length === deck.length &&
+    deck.some((it, pos) => it.id === mem.prevIds[pos])
+  );
+  mem.layout = deck;
+  mem.prevIds = deck.map(it => it.id);
+
+  const card = $("card");
+  card.style.background = "";
+  card.style.color = "";
+  card.innerHTML = '<div class="mem-grid p' + mem.pairs + '">'
+    + deck.map((it, i) =>
+        '<button class="mem-card" data-idx="' + i + '" aria-label="card">'
+        + '<span class="back">\u2B50</span>'
+        + '<span class="face">' + it.emoji + "</span>"
+        + "</button>").join("")
+    + "</div>";
+  card.classList.remove("pop");
+  void card.offsetWidth;
+  card.classList.add("pop");
+  memStartClock();
+}
+
+function flipMemCard(el){
+  if (mem.lock) return;
+  if (el.classList.contains("up") || el.classList.contains("matched")) return;
+  const idx = Number(el.dataset.idx);
+  const item = mem.layout[idx];
+  el.classList.add("up");
+  speak(item.id, item.say, null);
+  mem.flipped.push(idx);
+  if (mem.flipped.length < 2) return;
+
+  const [a, b] = mem.flipped;
+  mem.flipped = [];
+  const elA = document.querySelector('.mem-card[data-idx="' + a + '"]');
+  const elB = document.querySelector('.mem-card[data-idx="' + b + '"]');
+  if (mem.layout[a].id === mem.layout[b].id){
+    elA.classList.add("matched");
+    elB.classList.add("matched");
+    mem.matchedCount++;
+    if (mem.matchedCount === mem.pairs) memWin();
+  } else {
+    mem.lock = true;
+    setTimeout(() => {
+      elA.classList.remove("up");
+      elB.classList.remove("up");
+      mem.lock = false;
+    }, 1000);
+  }
+}
+
+function memWin(){
+  memStopClock();
+  const time = memFormat(Date.now() - mem.startAt);
+  const overlay = document.createElement("div");
+  overlay.id = "memWin";
+  overlay.innerHTML = '<div class="win-title">You did it!</div>'
+    + '<div class="win-time">' + time + "</div>"
+    + '<button id="memAgain">Play again</button>';
+  $("card").appendChild(overlay);
+  $("memAgain").addEventListener("click", newMemoryRound);
+  speak("memory-win", "You did it! Hooray!", null);
+}
+
+/* ------------------------- anthems ------------------------- */
+function renderAnthemChoice(){
+  stopSpeaking();
+  const card = $("card");
+  card.style.background = "";
+  card.style.color = "";
+  card.innerHTML = '<div class="count-title">Pick a flag!</div>'
+    + '<div class="flag-row">'
+    + ANTHEMS.map(a =>
+        '<button class="flag-btn" data-anthem="' + a.id + '">'
+        + '<span class="flag-emoji">' + a.flag + "</span>"
+        + '<span class="flag-name">' + a.country + "</span>"
+        + "</button>").join("")
+    + "</div>";
+  card.classList.remove("pop");
+  void card.offsetWidth;
+  card.classList.add("pop");
+}
+
+function playAnthem(id){
+  const a = ANTHEMS.find(x => x.id === id);
+  if (!a) return;
+  const card = $("card");
+  if (!navigator.onLine){
+    card.innerHTML = '<div class="flag-emoji">' + a.flag + "</div>"
+      + '<div class="count-title">The music needs the internet</div>'
+      + '<button class="anthem-back" id="anthemBack">Back to flags</button>';
+    return;
+  }
+  card.innerHTML =
+    '<div class="anthem-title">' + a.flag + " " + a.title + "</div>"
+    + '<div class="anthem-frame"><iframe src="https://www.youtube-nocookie.com/embed/'
+    + a.video + '?autoplay=1&playsinline=1&rel=0" title="' + a.title
+    + '" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>'
+    + '<button class="anthem-back" id="anthemBack">Back to flags</button>';
 }
 
 /* ------------------------- mode + navigation ------------------------- */
@@ -507,15 +937,38 @@ function setMode(mode){
 
 function openModule(key){
   state.module = key;
-  $("moduleName").textContent = MODULES[key].label;
+  const mod = MODULES[key];
+  $("moduleName").textContent = mod.label;
   $("home").classList.add("hidden");
   $("module").classList.remove("hidden");
-  setMode("teach");
+  $("modeToggle").classList.toggle("hidden", mod.type !== "learn");
+  $("memoryHud").classList.toggle("hidden", mod.type !== "memory");
+  if (mod.type === "learn"){
+    setMode("teach");
+  } else if (mod.type === "name"){
+    state.mode = "teach";
+    $("teachbar").classList.remove("hidden");
+    $("quizbar").classList.add("hidden");
+    nameSequence();
+  } else if (mod.type === "memory"){
+    state.mode = "game";
+    $("teachbar").classList.add("hidden");
+    $("quizbar").classList.add("hidden");
+    newMemoryRound();
+  } else if (mod.type === "anthems"){
+    state.mode = "anthems";
+    $("teachbar").classList.add("hidden");
+    $("quizbar").classList.add("hidden");
+    renderAnthemChoice();
+  }
 }
 
 function goHome(){
   clearTimers();
   stopSpeaking();
+  memStopClock();
+  recapGen++;
+  recapActive = false;
   $("module").classList.add("hidden");
   $("home").classList.remove("hidden");
 }
@@ -535,16 +988,43 @@ $("orderBtn").addEventListener("click", () => {
 });
 
 /* Tap the card: Teach replays the line (and restarts the clock),
-   Quiz says the answer so a parent can confirm. */
-$("card").addEventListener("click", () => {
+   Quiz says the answer, the name module restarts its sequence, and
+   the memory game flips cards. */
+$("card").addEventListener("click", (e) => {
+  const type = MODULES[state.module] ? MODULES[state.module].type : null;
+  if (type === "anthems"){
+    const flag = e.target.closest("[data-anthem]");
+    if (flag){ playAnthem(flag.dataset.anthem); return; }
+    if (e.target.closest("#anthemBack")) renderAnthemChoice();
+    return;
+  }
+  if (type === "memory"){
+    const el = e.target.closest(".mem-card");
+    if (el) flipMemCard(el);
+    return;
+  }
+  if (type === "name"){
+    nameSequence();
+    return;
+  }
   const item = currentItem();
   if (!item) return;
   if (state.mode === "teach"){
-    teachCurrent();
+    if (recapActive) recapModule();
+    else teachCurrent();
   } else {
     speak(item.id, item.say, null);
   }
 });
+$("memRestart").addEventListener("click", newMemoryRound);
+document.querySelectorAll("#pairPicker button").forEach(b =>
+  b.addEventListener("click", () => {
+    mem.pairs = Number(b.dataset.pairs);
+    mem.prevIds = []; /* board size changed; position rule resets */
+    document.querySelectorAll("#pairPicker button").forEach(x =>
+      x.classList.toggle("on", x === b));
+    newMemoryRound();
+  }));
 
 /* ------------------------- service worker ------------------------- */
 if ("serviceWorker" in navigator){

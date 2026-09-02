@@ -1,6 +1,11 @@
 # Tot Board
 
-A single-file learning app for a 2-year-old. Four modules: Numbers 0-10, Letters, Colors, Shapes. Each has Teach mode (auto-advancing, spoken, loops forever) and Quiz mode (silent, parent arrows, tap the card to hear the answer).
+A single-file learning app for a 2-year-old. Seven modules:
+
+- **Numbers 0-12, Letters, Colors, Shapes, Animals** — each has Teach mode (auto-advancing, spoken, loops forever) and Quiz mode (silent, parent arrows, tap the card to hear the answer). Every teach loop ends with a recap: all items appear in a grid and each one lights up as it is announced, then the loop starts over.
+- **Catherine** — says the name, spells it letter by letter with highlights, says it again, then repeats. Change the `NAME_TEXT` constant near the top of the script to spell a different name.
+- **Anthems** — two flags, Canada and USA. Tap one to watch that anthem in an embedded YouTube player. This is the one module that needs an internet connection; offline it shows a friendly message instead. Video ids live in the ANTHEMS constant near the top of the script.
+- **Memory Match** — pick 3, 6, or 9 pairs in the top bar (6, 12, or 18 cards), drawn from the full animal set, with a running timer. 3 pairs is the right starting size for age 2. Card positions reshuffle every round and never repeat a face in the same spot as the previous round. Tap the circular arrow in the top bar for a new round anytime.
 
 ## Files
 
@@ -35,7 +40,11 @@ Every spoken line has a key. Record an mp3, save it as `audio/<key>.mp3` in the 
 const CUSTOM_AUDIO = new Set(["num-3-teach", "num-3"]);
 ```
 
-Keys: each item has `<id>` (short answer, played on card tap in Quiz) and `<id>-teach` (full teaching line). Ids are `num-0`...`num-10`, `letter-a`...`letter-z`, `color-red` through `color-white`, and `shape-circle` through `shape-diamond`. The service worker caches audio after first load, so recordings work offline too. Remember to bump the cache version when you add audio.
+Keys: each item has `<id>` (short answer, played on card tap in Quiz, memory flips, and recaps) and `<id>-teach` (full teaching line). Ids are `num-0`...`num-12`, `letter-a`...`letter-z`, `color-red` through `color-white`, `shape-circle` through `shape-diamond`, and `animal-cow`, `animal-duck`, `animal-pig`, `animal-chicken`, `animal-horse`, `animal-dog`, `animal-cat`, `animal-sheep`, `animal-frog`, `animal-bunny`, `animal-lion`, `animal-elephant`.
+
+One-off keys: `count-intro`, `recap-letters`, `recap-colors`, `recap-shapes`, `recap-animals` (the recap opening lines), `name-catherine` (the spoken name), and `memory-win` (the memory game celebration).
+
+The service worker caches audio after first load, so recordings work offline too. Remember to bump the cache version when you add audio.
 
 ## Tuning the voice
 
