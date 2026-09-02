@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tot Board">
+<meta name="theme-color" content="#CDE9F7">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Tot Board — Numbers, Letters, Colors, Shapes</title>
+<style>
+  :root{
+    --sky:#CDE9F7;
+    --panel:#FFFFFF;
+    --ink:#23364A;
+    --ink-soft:#5F7288;
+    --line:#BBD7E8;
+    --barn:#C9483A;
+    --grass:#3FA65C;
+    --sun:#F2BE3C;
+    --plum:#8353C5;
+    --radius:26px;
+    --display:ui-rounded,-apple-system,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;background:var(--sky);color:var(--ink);
+    font-family:var(--display);
+    -webkit-user-select:none;user-select:none;
+    overscroll-behavior:none;touch-action:manipulation;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    overflow:hidden;
+  }
+  button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer;}
+  button:focus-visible{outline:4px solid var(--ink);outline-offset:3px;border-radius:14px;}
+  .hidden{display:none !important;}
+
+  /* ---------- home ---------- */
+  #home{
+    height:100%;max-width:1000px;margin:0 auto;padding:20px;
+    display:flex;flex-direction:column;justify-content:center;gap:20px;
+  }
+  .home-title{
+    text-align:center;font-weight:800;font-size:clamp(30px,5vw,46px);
+    letter-spacing:-0.02em;margin:0;
+  }
+  .home-sub{text-align:center;color:var(--ink-soft);font-weight:600;font-size:17px;margin:-8px 0 6px;}
+  .tile-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;
+  }
+  .tile{
+    border-radius:var(--radius);padding:26px 20px;min-height:170px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    color:#fff;font-weight:800;font-size:clamp(22px,3.4vw,32px);letter-spacing:-0.01em;
+    border:4px solid rgba(0,0,0,.10);
+    transition:transform .08s ease;
+  }
+  .tile:active{transform:scale(.96);}
+  .tile .glyphs{font-size:clamp(34px,6vw,54px);line-height:1;font-weight:800;}
+  #tile-numbers{background:var(--sun);color:#5B4308;}
+  #tile-letters{background:var(--barn);}
+  #tile-colors{background:var(--plum);}
+  #tile-shapes{background:var(--grass);}
+  .tile .glyphs .dot{display:inline-block;width:.7em;height:.7em;border-radius:50%;margin:0 2px;vertical-align:middle;}
+
+  /* ---------- module screen ---------- */
+  #module{height:100%;display:flex;flex-direction:column;padding:14px 16px;gap:12px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .home-btn{
+    width:56px;height:56px;border-radius:18px;background:var(--panel);
+    border:3px solid var(--line);font-size:26px;line-height:1;
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  }
+  .module-name{font-weight:800;font-size:22px;letter-spacing:-0.01em;flex:1;text-align:center;}
+  .mode-toggle{
+    display:flex;background:var(--panel);border:3px solid var(--line);
+    border-radius:18px;padding:4px;gap:4px;flex:0 0 auto;
+  }
+  .mode-toggle button{
+    font-weight:800;font-size:17px;padding:10px 18px;border-radius:13px;color:var(--ink-soft);
+  }
+  .mode-toggle button.on{background:var(--ink);color:#fff;}
+
+  /* ---------- card ---------- */
+  #card{
+    flex:1;min-height:0;border-radius:var(--radius);
+    background:var(--panel);border:4px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:2vh;padding:2vh 3vw;text-align:center;overflow:hidden;position:relative;
+  }
+  #card.pop{animation:pop .32s ease-out;}
+  @keyframes pop{
+    0%{transform:scale(.86);opacity:.4;}
+    70%{transform:scale(1.03);}
+    100%{transform:scale(1);opacity:1;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    #card.pop{animation:none;}
+    .tile,.btn-big{transition:none;}
+  }
+
+  .big-number{font-size:min(36vh,30vw);font-weight:800;line-height:.95;letter-spacing:-0.03em;}
+  .animal-rows{display:flex;flex-direction:column;gap:1.2vh;align-items:center;}
+  .animal-row{display:flex;gap:1.4vw;font-size:min(9vh,8vw);line-height:1;}
+  .none-word{color:var(--ink-soft);font-weight:700;font-size:min(6vh,5vw);}
+
+  .big-letters{font-size:min(34vh,26vw);font-weight:800;line-height:1;letter-spacing:.02em;}
+  .sound-chips{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .sound-chip{
+    background:var(--sky);border:3px solid var(--line);border-radius:999px;
+    padding:8px 22px;font-weight:800;font-size:min(4.5vh,4vw);color:var(--ink);
+  }
+  .sound-chip.short{background:#FBEBC2;border-color:#E4B94F;color:#6B4E0A;}
+  .sound-chip.long{background:#DDF2E5;border-color:#58BB7C;color:#1D5E36;}
+  .sound-legend{display:flex;gap:16px;font-size:15px;font-weight:700;}
+  .leg{display:inline-flex;align-items:center;gap:6px;color:var(--ink-soft);}
+  .leg::before{content:"";width:14px;height:14px;border-radius:50%;}
+  .leg.short::before{background:#E4B94F;}
+  .leg.long::before{background:#58BB7C;}
+
+  .color-name{font-size:min(18vh,16vw);font-weight:800;line-height:1;letter-spacing:-0.02em;}
+  .color-emoji{font-size:min(12vh,11vw);line-height:1;}
+
+  .shape-svg{width:min(46vh,46vw);height:min(46vh,46vw);}
+  .shape-name{font-size:min(11vh,10vw);font-weight:800;line-height:1;letter-spacing:-0.02em;}
+
+  /* ---------- quiz bar ---------- */
+  #quizbar{display:flex;align-items:center;justify-content:space-between;gap:14px;}
+  .btn-big{
+    flex:1;height:84px;border-radius:22px;font-size:40px;font-weight:800;
+    background:var(--panel);border:4px solid var(--line);
+    transition:transform .06s ease;
+  }
+  .btn-big:active{transform:scale(.96);}
+  #orderBtn{
+    flex:0 0 auto;height:84px;border-radius:22px;padding:0 22px;
+    background:var(--panel);border:4px solid var(--line);
+    font-weight:800;font-size:18px;color:var(--ink-soft);
+  }
+  #teachbar{display:flex;justify-content:center;}
+  .teach-hint{color:var(--ink-soft);font-weight:600;font-size:16px;padding:6px 0 2px;}
+</style>
+</head>
+<body>
+
+<!-- ================= HOME ================= -->
+<div id="home">
+  <h1 class="home-title">Tot Board</h1>
+  <p class="home-sub">Pick something to learn</p>
+  <div class="tile-grid">
+    <button class="tile" id="tile-numbers" data-module="numbers">
+      <span class="glyphs">1 2 3</span><span>Numbers</span>
+    </button>
+    <button class="tile" id="tile-letters" data-module="letters">
+      <span class="glyphs">A b C</span><span>Letters</span>
+    </button>
+    <button class="tile" id="tile-colors" data-module="colors">
+      <span class="glyphs"><span class="dot" style="background:#E23B2E"></span><span class="dot" style="background:#F2BE3C"></span><span class="dot" style="background:#2F7FD1"></span></span><span>Colors</span>
+    </button>
+    <button class="tile" id="tile-shapes" data-module="shapes">
+      <span class="glyphs">&#9679; &#9632; &#9650;</span><span>Shapes</span>
+    </button>
+  </div>
+</div>
+
+<!-- ================= MODULE ================= -->
+<div id="module" class="hidden">
+  <div class="topbar">
+    <button class="home-btn" id="homeBtn" aria-label="Back to home">&#8962;</button>
+    <div class="module-name" id="moduleName"></div>
+    <div class="mode-toggle">
+      <button id="teachBtn" class="on">Teach</button>
+      <button id="quizBtn">Quiz</button>
+    </div>
+  </div>
+
+  <div id="card"></div>
+
+  <div id="teachbar"><div class="teach-hint">Playing on its own — tap the card to hear it again</div></div>
+
+  <div id="quizbar" class="hidden">
+    <button class="btn-big" id="prevBtn" aria-label="Previous">&#9664;</button>
+    <button id="orderBtn">Mixed up</button>
+    <button class="btn-big" id="nextBtn" aria-label="Next">&#9654;</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   CUSTOM AUDIO HOOK
+   The app speaks with the device text-to-speech voice by default.
+   To replace any line with your own recording (a real "Ms. Rachel" read):
+     1. Record a clip and save it as audio/<key>.mp3 in the repo.
+     2. Add the key to CUSTOM_AUDIO below.
+   Keys: every item has two —
+     "<id>"        the short answer, played when a card is tapped in Quiz
+     "<id>-teach"  the full teaching line, played in Teach mode
+   Ids: num-0 … num-10, letter-a … letter-z,
+        color-red, color-orange, color-yellow, color-green, color-blue,
+        color-purple, color-pink, color-brown, color-black, color-white,
+        shape-circle, shape-square, shape-triangle, shape-rectangle,
+        shape-star, shape-heart, shape-oval, shape-diamond
+   Example: CUSTOM_AUDIO = new Set(["num-3-teach", "num-3"]);
+   The service worker caches audio files after first load, so they work
+   offline too.
+   ========================================================================= */
+const AUDIO_BASE = "audio/";
+const CUSTOM_AUDIO = new Set([]);
+
+/* ------------------------- content ------------------------- */
+const ANIMALS = [
+  {emoji:"\u{1F404}", word:"cows"},
+  {emoji:"\u{1F986}", word:"ducks"},
+  {emoji:"\u{1F437}", word:"pigs"},
+  {emoji:"\u{1F414}", word:"chickens"},
+  {emoji:"\u{1F434}", word:"horses"}
+];
+const NUMBER_WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"];
+
+const NUMBERS = [];
+for (let n = 0; n <= 10; n++) {
+  const a = n === 0 ? ANIMALS[1] : ANIMALS[(n - 1) % 5]; // rotates cow, duck, pig, chicken, horse
+  NUMBERS.push({
+    id: "num-" + n,
+    n: n,
+    animal: a,
+    say: NUMBER_WORDS[n] + "!",
+    teach: n === 0
+      ? "Zero! Zero " + a.word + ". Zero means none!"
+      : NUMBER_WORDS[n] + "! " + NUMBER_WORDS[n] + " " + (n === 1 ? a.word.slice(0, -1) : a.word) + "!"
+  });
+}
+
+/* Sound spellings are what the device voice reads aloud, so they are
+   phonetic, not dictionary words. Tune them if a sound comes out odd
+   on your iPad. Vowel sounds are tagged short or long so the chips
+   can be color-coded; consonant sounds stay neutral. */
+const S = (s) => ({s, t:"short"});
+const L = (s) => ({s, t:"long"});
+const N = (s) => ({s, t:""});
+const LETTER_SOUNDS = {
+  A:[S("ahh"),L("ay")], B:[N("buh")], C:[N("kuh"),N("sss")], D:[N("duh")],
+  E:[S("eh"),L("ee")], F:[N("fuh")], G:[N("guh"),N("juh")], H:[N("huh")],
+  I:[S("ih"),L("eye")], J:[N("juh")], K:[N("kuh")], L:[N("luh")],
+  M:[N("muh")], N:[N("nuh")], O:[S("aw"),L("oh")], P:[N("puh")],
+  Q:[N("kwuh")], R:[N("ruh")], S:[N("sss")], T:[N("tuh")],
+  U:[S("uh"),L("yoo")], V:[N("vuh")], W:[N("wuh")], X:[N("kss")],
+  Y:[N("yuh")], Z:[N("zuh")]
+};
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(Ltr => ({
+  id: "letter-" + Ltr.toLowerCase(),
+  upper: Ltr,
+  lower: Ltr.toLowerCase(),
+  sounds: LETTER_SOUNDS[Ltr],
+  say: Ltr + "!",
+  teach: Ltr + "! Big " + Ltr + ", and little " + Ltr + ". "
+    + LETTER_SOUNDS[Ltr].map(x => Ltr + " says " + x.s).join(". And ") + "."
+}));
+
+const COLORS = [
+  {id:"color-red",    name:"Red",    hex:"#E23B2E", ink:"#FFFFFF", emoji:"\u{1F34E}", like:"like a red apple"},
+  {id:"color-orange", name:"Orange", hex:"#F5862B", ink:"#FFFFFF", emoji:"\u{1F955}", like:"like an orange carrot"},
+  {id:"color-yellow", name:"Yellow", hex:"#F6C445", ink:"#5B4308", emoji:"\u2600\uFE0F", like:"like the yellow sun"},
+  {id:"color-green",  name:"Green",  hex:"#3FA65C", ink:"#FFFFFF", emoji:"\u{1F438}", like:"like a green frog"},
+  {id:"color-blue",   name:"Blue",   hex:"#2F7FD1", ink:"#FFFFFF", emoji:"\u{1F433}", like:"like a blue whale"},
+  {id:"color-purple", name:"Purple", hex:"#8353C5", ink:"#FFFFFF", emoji:"\u{1F347}", like:"like purple grapes"},
+  {id:"color-pink",   name:"Pink",   hex:"#F27BA6", ink:"#5E1F38", emoji:"\u{1F437}", like:"like a pink pig"},
+  {id:"color-brown",  name:"Brown",  hex:"#8B5A34", ink:"#FFFFFF", emoji:"\u{1F43B}", like:"like a brown bear"},
+  {id:"color-black",  name:"Black",  hex:"#26262B", ink:"#FFFFFF", emoji:"\u{1F408}\u200D\u2B1B", like:"like a black cat"},
+  {id:"color-white",  name:"White",  hex:"#FFFFFF", ink:"#23364A", emoji:"\u26C4", like:"like white snow"}
+].map(c => ({...c, say: c.name + "!", teach: c.name + "! " + c.name + ", " + c.like + "!"}));
+
+const SHAPE_COLORS = {circle:"#E23B2E", square:"#2F7FD1", triangle:"#3FA65C", rectangle:"#F5862B",
+                      star:"#F6C445", heart:"#E85D8A", oval:"#8353C5", diamond:"#2AA7A0"};
+function shapeSVG(kind){
+  const fill = SHAPE_COLORS[kind];
+  const inner = {
+    circle:   '<circle cx="50" cy="50" r="40"/>',
+    square:   '<rect x="14" y="14" width="72" height="72" rx="8"/>',
+    triangle: '<polygon points="50,12 90,84 10,84" stroke-linejoin="round"/>',
+    rectangle:'<rect x="6" y="28" width="88" height="44" rx="8"/>',
+    star:     '<polygon points="50,6 61,36 93,36 67,56 76,88 50,69 24,88 33,56 7,36 39,36" stroke-linejoin="round"/>',
+    heart:    '<path d="M50 88 C20 64 8 46 8 32 C8 18 19 10 30 10 C39 10 46 15 50 23 C54 15 61 10 70 10 C81 10 92 18 92 32 C92 46 80 64 50 88 Z"/>',
+    oval:     '<ellipse cx="50" cy="50" rx="43" ry="30"/>',
+    diamond:  '<polygon points="50,6 90,50 50,94 10,50" stroke-linejoin="round"/>'
+  }[kind];
+  return '<svg class="shape-svg" viewBox="0 0 100 100" fill="' + fill + '" stroke="' + fill + '" stroke-width="4">' + inner + '</svg>';
+}
+const SHAPES = [
+  {id:"shape-circle",    name:"Circle",    teachTail:"A circle is round and round!"},
+  {id:"shape-square",    name:"Square",    teachTail:"A square has four sides, all the same!"},
+  {id:"shape-triangle",  name:"Triangle",  teachTail:"A triangle has three sides!"},
+  {id:"shape-rectangle", name:"Rectangle", teachTail:"A rectangle has two long sides and two short sides!"},
+  {id:"shape-star",      name:"Star",      teachTail:"Twinkle twinkle little star!"},
+  {id:"shape-heart",     name:"Heart",     teachTail:"A heart means I love you!"},
+  {id:"shape-oval",      name:"Oval",      teachTail:"An oval is round like an egg!"},
+  {id:"shape-diamond",   name:"Diamond",   teachTail:"A diamond looks like a kite!"}
+].map(s => ({...s, kind: s.id.slice(6), say: s.name + "!", teach: s.name + "! " + s.teachTail}));
+
+const MODULES = {
+  numbers: {label:"Numbers", items:NUMBERS},
+  letters: {label:"Letters", items:LETTERS},
+  colors:  {label:"Colors",  items:COLORS},
+  shapes:  {label:"Shapes",  items:SHAPES}
+};
+
+/* ------------------------- speech ------------------------- */
+let chosenVoice = null;
+function pickVoice(){
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+  const prefs = ["Samantha","Ava","Allison","Susan","Karen","Moira","Google US English"];
+  for (const name of prefs){
+    const v = voices.find(v => v.name.startsWith(name) && v.lang.startsWith("en"));
+    if (v){ chosenVoice = v; return; }
+  }
+  chosenVoice = voices.find(v => v.lang === "en-US") || voices.find(v => v.lang.startsWith("en")) || voices[0];
+}
+if ("speechSynthesis" in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+}
+
+let currentClip = null;
+let speakGen = 0; // canceling speech still fires onend; the token keeps stale callbacks quiet
+function stopSpeaking(){
+  speakGen++;
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  if (currentClip){ currentClip.pause(); currentClip = null; }
+}
+
+/* speak(key, text, done) — plays audio/<key>.mp3 if registered in
+   CUSTOM_AUDIO, otherwise speaks `text` with the device voice.
+   Calls done() when finished (or immediately if speech is unavailable). */
+function speak(key, text, done){
+  stopSpeaking();
+  const myGen = speakGen;
+  const finish = () => { if (speakGen === myGen && done) done(); };
+  if (CUSTOM_AUDIO.has(key)){
+    const clip = new Audio(AUDIO_BASE + key + ".mp3");
+    currentClip = clip;
+    clip.onended = finish;
+    clip.onerror = finish;
+    clip.play().catch(finish);
+    return;
+  }
+  if (!("speechSynthesis" in window)){ finish(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  if (chosenVoice) u.voice = chosenVoice;
+  u.rate = 0.9;
+  u.pitch = 1.2;
+  u.onend = finish;
+  u.onerror = finish;
+  speechSynthesis.speak(u);
+}
+
+/* iOS unlocks speech after the first user tap */
+let primed = false;
+document.addEventListener("pointerdown", () => {
+  if (primed || !("speechSynthesis" in window)) return;
+  primed = true;
+  const u = new SpeechSynthesisUtterance(" ");
+  u.volume = 0;
+  speechSynthesis.speak(u);
+}, {once:false, capture:true});
+
+/* ------------------------- state ------------------------- */
+const $ = id => document.getElementById(id);
+const state = {
+  module: null,   // key into MODULES
+  mode: "teach",  // "teach" | "quiz"
+  order: [],      // array of indices into items
+  pos: 0,         // position within order
+  mixed: true     // quiz order shuffled?
+};
+let advanceTimer = null;
+let safetyTimer = null;
+
+function clearTimers(){
+  clearTimeout(advanceTimer); advanceTimer = null;
+  clearTimeout(safetyTimer);  safetyTimer  = null;
+}
+
+function shuffled(n){
+  const a = Array.from({length:n}, (_, i) => i);
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function currentItem(){
+  return MODULES[state.module].items[state.order[state.pos]];
+}
+
+/* ------------------------- rendering ------------------------- */
+function renderCard(){
+  const card = $("card");
+  const item = currentItem();
+  card.style.background = "";
+  card.style.color = "";
+
+  if (state.module === "numbers"){
+    const rows = item.n === 0
+      ? '<div class="none-word">none!</div>'
+      : '<div class="animal-rows">' + buildAnimalRows(item) + "</div>";
+    card.innerHTML = '<div class="big-number">' + item.n + "</div>" + rows;
+  }
+  else if (state.module === "letters"){
+    const chips = item.sounds.map(x =>
+      '<span class="sound-chip' + (x.t ? " " + x.t : "") + '">' + x.s + "</span>").join("");
+    const hasVowel = item.sounds.some(x => x.t);
+    const legend = hasVowel
+      ? '<div class="sound-legend"><span class="leg short">short</span><span class="leg long">long</span></div>'
+      : "";
+    card.innerHTML = '<div class="big-letters">' + item.upper + " " + item.lower + "</div>"
+      + '<div class="sound-chips">' + chips + "</div>" + legend;
+  }
+  else if (state.module === "colors"){
+    card.style.background = item.hex;
+    card.style.color = item.ink;
+    card.innerHTML = '<div class="color-emoji">' + item.emoji + "</div>"
+      + '<div class="color-name">' + item.name + "</div>";
+  }
+  else if (state.module === "shapes"){
+    card.innerHTML = shapeSVG(item.kind) + '<div class="shape-name">' + item.name + "</div>";
+  }
+
+  card.classList.remove("pop");
+  void card.offsetWidth; /* restart animation */
+  card.classList.add("pop");
+}
+
+function buildAnimalRows(item){
+  const per = item.n <= 5 ? item.n : Math.ceil(item.n / 2);
+  let left = item.n, html = "";
+  while (left > 0){
+    const take = Math.min(per, left);
+    let row = "";
+    for (let i = 0; i < take; i++) row += "<span>" + item.animal.emoji + "</span>";
+    html += '<div class="animal-row">' + row + "</div>";
+    left -= take;
+  }
+  return html;
+}
+
+/* ------------------------- teach loop ------------------------- */
+const TEACH_PAUSE = 1800;   // quiet time after the line, before advancing
+const TEACH_SAFETY = 12000; // advance anyway if speech never reports back
+
+function teachCurrent(){
+  clearTimers();
+  renderCard();
+  const item = currentItem();
+  speak(item.id + "-teach", item.teach, () => {
+    if (state.mode !== "teach") return;
+    advanceTimer = setTimeout(teachNext, TEACH_PAUSE);
+  });
+  safetyTimer = setTimeout(() => {
+    if (state.mode === "teach") teachNext();
+  }, TEACH_SAFETY);
+}
+
+function teachNext(){
+  clearTimers();
+  state.pos = (state.pos + 1) % state.order.length; // loops forever
+  teachCurrent();
+}
+
+/* ------------------------- quiz ------------------------- */
+function quizShow(){
+  clearTimers();
+  stopSpeaking();
+  renderCard();
+}
+function quizMove(step){
+  const len = state.order.length;
+  state.pos = (state.pos + step + len) % len;
+  quizShow();
+}
+
+/* ------------------------- mode + navigation ------------------------- */
+function setMode(mode){
+  state.mode = mode;
+  $("teachBtn").classList.toggle("on", mode === "teach");
+  $("quizBtn").classList.toggle("on", mode === "quiz");
+  $("teachbar").classList.toggle("hidden", mode !== "teach");
+  $("quizbar").classList.toggle("hidden", mode !== "quiz");
+  clearTimers();
+  stopSpeaking();
+  const n = MODULES[state.module].items.length;
+  if (mode === "teach"){
+    state.order = Array.from({length:n}, (_, i) => i);
+    state.pos = 0;
+    teachCurrent();
+  } else {
+    state.order = state.mixed ? shuffled(n) : Array.from({length:n}, (_, i) => i);
+    state.pos = 0;
+    quizShow();
+  }
+}
+
+function openModule(key){
+  state.module = key;
+  $("moduleName").textContent = MODULES[key].label;
+  $("home").classList.add("hidden");
+  $("module").classList.remove("hidden");
+  setMode("teach");
+}
+
+function goHome(){
+  clearTimers();
+  stopSpeaking();
+  $("module").classList.add("hidden");
+  $("home").classList.remove("hidden");
+}
+
+/* ------------------------- wiring ------------------------- */
+document.querySelectorAll(".tile").forEach(t =>
+  t.addEventListener("click", () => openModule(t.dataset.module)));
+$("homeBtn").addEventListener("click", goHome);
+$("teachBtn").addEventListener("click", () => setMode("teach"));
+$("quizBtn").addEventListener("click", () => setMode("quiz"));
+$("prevBtn").addEventListener("click", () => quizMove(-1));
+$("nextBtn").addEventListener("click", () => quizMove(1));
+$("orderBtn").addEventListener("click", () => {
+  state.mixed = !state.mixed;
+  $("orderBtn").textContent = state.mixed ? "Mixed up" : "In order";
+  setMode("quiz");
+});
+
+/* Tap the card: Teach replays the line (and restarts the clock),
+   Quiz says the answer so a parent can confirm. */
+$("card").addEventListener("click", () => {
+  const item = currentItem();
+  if (!item) return;
+  if (state.mode === "teach"){
+    teachCurrent();
+  } else {
+    speak(item.id, item.say, null);
+  }
+});
+
+/* ------------------------- service worker ------------------------- */
+if ("serviceWorker" in navigator){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+}
+</script>
+</body>
+</html>
