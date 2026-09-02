@@ -41,8 +41,16 @@
 
   /* ---------- home ---------- */
   #home{
-    height:100%;max-width:1000px;margin:0 auto;padding:20px;
+    height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .home-inner{
+    min-height:100%;max-width:1000px;margin:0 auto;padding:20px;
     display:flex;flex-direction:column;justify-content:center;gap:20px;
+  }
+  @media (max-height:760px){
+    .home-inner{gap:12px;padding:14px;}
+    .tile-grid{gap:12px;}
+    .tile{min-height:110px;padding:14px 10px;gap:6px;}
   }
   .home-title{
     text-align:center;font-weight:800;font-size:clamp(30px,5vw,46px);
@@ -216,8 +224,10 @@
   .sound-chips{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
   .sound-chip{
     background:var(--sky);border:3px solid var(--line);border-radius:999px;
-    padding:8px 22px;font-weight:800;font-size:min(4.5vh,4vw);color:var(--ink);
+    padding:8px 22px;font-weight:800;font-size:min(4vh,3.6vw);color:var(--ink);
+    display:inline-flex;align-items:center;gap:10px;
   }
+  .chip-emoji{font-size:1.3em;line-height:1;}
   .sound-chip.short{background:#FBEBC2;border-color:#E4B94F;color:#6B4E0A;}
   .sound-chip.long{background:#DDF2E5;border-color:#58BB7C;color:#1D5E36;}
   .sound-legend{display:flex;gap:16px;font-size:15px;font-weight:700;}
@@ -253,6 +263,7 @@
 
 <!-- ================= HOME ================= -->
 <div id="home">
+  <div class="home-inner">
   <h1 class="home-title">Tot Board</h1>
   <p class="home-sub">Pick something to learn</p>
   <div class="tile-grid">
@@ -280,6 +291,7 @@
     <button class="tile" id="tile-anthems" data-module="anthems">
       <span class="glyphs">&#x1F1E8;&#x1F1E6; &#x1F1FA;&#x1F1F8;</span><span>Anthems</span>
     </button>
+  </div>
   </div>
 </div>
 
@@ -360,20 +372,20 @@ for (let n = 0; n <= 12; n++) {
   });
 }
 
-/* Sound spellings are what the device voice reads aloud, so they are
-   phonetic, not dictionary words. Tune them if a sound comes out odd
-   on your iPad. Vowel sounds are tagged short or long so the chips
-   can be color-coded; consonant sounds stay neutral. */
+/* Letter sounds, spoken as "The B says buh." The spellings are what
+   the device voice reads aloud, so they are phonetic, not dictionary
+   words — tune any that sound off on your device (X is the fussiest).
+   Vowels tagged short/long for the color-coded chips. */
 const S = (s) => ({s, t:"short"});
 const L = (s) => ({s, t:"long"});
 const N = (s) => ({s, t:""});
 const LETTER_SOUNDS = {
-  A:[S("ahh"),L("ay")], B:[N("buh")], C:[N("kuh"),N("sss")], D:[N("duh")],
+  A:[S("ah"),L("ay")], B:[N("buh")], C:[N("see"),N("kuh")], D:[N("duh")],
   E:[S("eh"),L("ee")], F:[N("fuh")], G:[N("guh"),N("juh")], H:[N("huh")],
   I:[S("ih"),L("eye")], J:[N("juh")], K:[N("kuh")], L:[N("luh")],
-  M:[N("muh")], N:[N("nuh")], O:[S("aw"),L("oh")], P:[N("puh")],
+  M:[N("muh")], N:[N("nuh")], O:[S("ah"),L("oh")], P:[N("puh")],
   Q:[N("kwuh")], R:[N("ruh")], S:[N("sss")], T:[N("tuh")],
-  U:[S("uh"),L("yoo")], V:[N("vuh")], W:[N("wuh")], X:[N("kss")],
+  U:[S("uh"),L("yoo")], V:[N("vuh")], W:[N("wuh")], X:[N("ks")],
   Y:[N("yuh")], Z:[N("zuh")]
 };
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(Ltr => ({
@@ -382,8 +394,8 @@ const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(Ltr => ({
   lower: Ltr.toLowerCase(),
   sounds: LETTER_SOUNDS[Ltr],
   say: Ltr + "!",
-  teach: Ltr + "! Big " + Ltr + ", and little " + Ltr + ". "
-    + LETTER_SOUNDS[Ltr].map(x => Ltr + " says " + x.s).join(". And ") + "."
+  teach: Ltr + "! "
+    + LETTER_SOUNDS[Ltr].map((x, i) => (i === 0 ? "The " : "the ") + Ltr + " says " + x.s).join(". And ") + "."
 }));
 
 const COLORS = [

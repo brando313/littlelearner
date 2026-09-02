@@ -1,5 +1,5 @@
 /* Tot Board service worker — cache-first, single-file app */
-const CACHE = "totboard-v5";
+const CACHE = "totboard-v8";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./icon-180.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {

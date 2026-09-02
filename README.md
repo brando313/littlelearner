@@ -48,4 +48,4 @@ The service worker caches audio after first load, so recordings work offline too
 
 ## Tuning the voice
 
-The app prefers the Samantha voice, then Ava, Allison, Karen. For a warmer sound, download the enhanced version of the voice on the iPad: Settings > Accessibility > Spoken Content > Voices > English. The phonetic spellings the voice reads for letter sounds live in `LETTER_SOUNDS` near the top of the script; adjust any string that sounds wrong on your device.
+The app prefers the Samantha voice, then Ava, Allison, Karen. For a warmer sound, download the enhanced version of the voice on the iPad: Settings > Accessibility > Spoken Content > Voices > English. Letter sounds are spoken as 'The B says buh.' The phonetic spellings live in `LETTER_SOUNDS` near the top of the script; tune any that sound off on your device. For perfect phoneme sounds, record custom audio clips for the letter-x-teach keys.
