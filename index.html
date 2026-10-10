@@ -142,12 +142,19 @@
   .animal-big{font-size:min(36vh,30vw);line-height:1;}
 
   /* ---------- name module ---------- */
-  .name-tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:1.4vh;}
+  .name-tiles{
+    display:flex;flex-wrap:nowrap;justify-content:center;
+    gap:min(1.4vh,1vw);width:100%;
+    --n:9; /* overwritten inline with the letter count */
+    --tgap:min(1.4vh,1vw);
+  }
   .name-tile{
-    width:min(13vh,9.5vw);height:min(15vh,11.5vw);
+    flex:0 1 calc((100% - (var(--n) - 1) * var(--tgap)) / var(--n));
+    min-width:0;max-width:min(13vh,10vw);
+    aspect-ratio:0.85;
     display:flex;align-items:center;justify-content:center;
     border-radius:20%;background:var(--sky);border:4px solid var(--line);
-    font-weight:800;font-size:min(9vh,7vw);
+    font-weight:800;font-size:min(9vh,calc(62vw / var(--n)));
     transition:transform .16s ease, background .16s ease, border-color .16s ease;
   }
   .name-tile.lit{background:#FBEBC2;border-color:#E4B94F;}
@@ -749,7 +756,7 @@ function nameSequence(){
   card.style.background = "";
   card.style.color = "";
   card.innerHTML = '<div class="name-word">' + NAME_TEXT + "</div>"
-    + '<div class="name-tiles">'
+    + '<div class="name-tiles" style="--n:' + chars.length + '">'
     + chars.map((ch, i) => '<span class="name-tile" id="cell-' + i + '">' + ch + "</span>").join("")
     + "</div>";
   card.classList.remove("pop");
